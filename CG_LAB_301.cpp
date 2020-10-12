@@ -60,10 +60,14 @@ int task_1()
     Mat img1 = imread(image2_path, IMREAD_COLOR);
     if (img.empty() || img1.empty())
     {
-        cout << "Could not read the image: " << image1_path << std::endl;
+        cout << "Could not read the image: " << image1_path << endl;
         return 1;
     }
-
+    if (img.size != img1.size)
+    {
+        cout << "Images have different sizes, that's error: " << endl;
+        return 1;
+    }
     namedWindow("Reference window", WINDOW_AUTOSIZE);
     namedWindow("Test window", WINDOW_AUTOSIZE);
     moveWindow("Test window", 400, 0);
@@ -105,7 +109,7 @@ Scalar getMSSIM(const Mat& i1, const Mat& i2)
     Mat I1_I2 = I1.mul(I2);        // I1 * I2
 
     // PRELIMINARY COMPUTING
-
+    
     Mat mu1, mu2;   //
     GaussianBlur(I1, mu1, Size(11, 11), 1.5);
     GaussianBlur(I2, mu2, Size(11, 11), 1.5);
@@ -124,6 +128,7 @@ Scalar getMSSIM(const Mat& i1, const Mat& i2)
 
     GaussianBlur(I1_I2, sigma12, Size(11, 11), 1.5);
     sigma12 -= mu1_mu2;
+    
 
     // FORMULA
     Mat t1, t2, t3;
