@@ -23,7 +23,8 @@ int main()
 { 
     int opt;
 
-    cout 
+    cout
+        << endl
         << "   Main Menu    " << endl
         << endl << "Write 1 for task_1" << endl
         << endl << "Write 2 for task_2a" << endl
@@ -119,7 +120,6 @@ int task_3b()
     string image_path = samples::findFile("1.jpg");
     Mat img1, img2, img3;
     img1 = imread(image_path, IMREAD_COLOR);
-
     if (img1.empty())
     {
         cout << "Image cannot be loaded..!!" << endl;
