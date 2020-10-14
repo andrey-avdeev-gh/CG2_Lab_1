@@ -139,7 +139,7 @@ int task_3b()
     img1 = chooseimg();
 
     cvtColor(img1, img2, COLOR_RGB2HSV);
-    cvtColor(img2, img3, COLOR_HSV2BGR);
+    cvtColor(img2, img3, COLOR_HSV2RGB);
 
     namedWindow("origin", WINDOW_AUTOSIZE);
     namedWindow("rgb2hsv", WINDOW_AUTOSIZE);
@@ -149,7 +149,7 @@ int task_3b()
     imshow("rgb2hsv", img2);
     imshow("hsv2rgb", img3);
 
-    waitKey(0); // Wait for a keystroke in the window
+    waitKey(0);
     destroyAllWindows();
     main();
 }
@@ -169,7 +169,7 @@ int task_3d_rgb()
         imshow("New Brightness", img_new_brightness);
 
 
-        waitKey(0); //wait for key press
+        waitKey(0);
         destroyAllWindows();
         main();
 }
@@ -192,7 +192,7 @@ int task_3d_hsv()
     imshow("New Brightness", img_new_brightness);
 
 
-    waitKey(0); //wait for key press
+    waitKey(0);
     destroyAllWindows();
     main();
 
