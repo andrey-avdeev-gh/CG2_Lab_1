@@ -10,6 +10,12 @@ using namespace std;
 using namespace cv;
 
 int task_1();
+int task_2a();
+int task_2b();
+int task_3a();
+int task_3b();
+int task_3d_rgb();
+int task_3d_hsv();
 Scalar getMSSIM(const Mat& i1, const Mat& i2);
 
 
@@ -20,8 +26,12 @@ int main()
     cout 
         << "   Main Menu    " << endl
         << endl << "Write 1 for task_1" << endl
-        << endl << "Write 2 for task_2" << endl
-        << endl << "Write 3 for task_3" << endl
+        << endl << "Write 2 for task_2a" << endl
+        << endl << "Write 3 for task_2b" << endl
+        << endl << "Write 4 for task_3a" << endl
+        << endl << "Write 5 for task_3b" << endl
+        << endl << "Write 6 for task_3d_rgb" << endl
+        << endl << "Write 7 for task_3d_hsv" << endl
         << endl
         << endl << "Write 0 to exit" << endl
         << endl
@@ -36,10 +46,22 @@ int main()
         task_1();
         break;
     case 2:
-        //Code
+        //Кирилл
         break;
     case 3:
-        //Code
+        //Кирилл
+        break;
+    case 4:
+        //Кирилл
+        break;
+    case 5:
+        task_3b();
+        break;
+    case 6:
+        task_3d_rgb();
+        break;
+    case 7:
+        task_3d_hsv();
         break;
     case 0:
         exit(1);
@@ -51,6 +73,8 @@ int main()
     return 0;
 }
 
+
+//Functions
 int task_1()
 {
     string image1_path = samples::findFile("1.jpg");
@@ -83,16 +107,99 @@ int task_1()
         << endl
         ;
 
-    int l = waitKey(0); // Wait for a keystroke in the window
-    if (l == 'b')
-    {
-
-        imwrite("1.png", img);
-        imwrite("2.png", img1);
-    }
+    waitKey(0);
+    destroyAllWindows();
+    main();
 }
 
+//Кирилл впишет свою часть сюда
 
+int task_3b()
+{
+    string image_path = samples::findFile("1.jpg");
+    Mat img1, img2, img3;
+    img1 = imread(image_path, IMREAD_COLOR);
+
+    if (img1.empty())
+    {
+        cout << "Image cannot be loaded..!!" << endl;
+        return -1;
+    }
+
+    cvtColor(img1, img2, COLOR_RGB2HSV);
+    cvtColor(img2, img3, COLOR_HSV2BGR);
+
+    namedWindow("origin", WINDOW_AUTOSIZE);
+    namedWindow("rgb2hsv", WINDOW_AUTOSIZE);
+    namedWindow("hsv2rgb", WINDOW_AUTOSIZE);
+
+    imshow("origin", img1);
+    imshow("rgb2hsv", img2);
+    imshow("hsv2rgb", img3);
+
+    waitKey(0); // Wait for a keystroke in the window
+    destroyAllWindows();
+    main();
+}
+
+int task_3d_rgb()
+{
+        string image_path = samples::findFile("1.jpg");
+        Mat img = imread(image_path, IMREAD_COLOR); //open and read the image
+
+
+        if (img.empty())
+        {
+            cout << "Image cannot be loaded..!!" << endl;
+            return -1;
+        }
+
+        int brightness = 0;
+        cout << endl << "Please, enter multiplier for brightness: ";
+        cin >> brightness;
+
+        Mat img_new_brightness;
+        img.convertTo(img_new_brightness, -1, 1, brightness);
+
+        namedWindow("New Brightness", WINDOW_AUTOSIZE);
+        imshow("New Brightness", img_new_brightness);
+
+
+        waitKey(0); //wait for key press
+        destroyAllWindows();
+        main();
+}
+
+int task_3d_hsv()
+{
+    string image_path = samples::findFile("1.jpg");
+    Mat img1, img2;
+    img1 = imread(image_path, IMREAD_COLOR);
+
+    if (img1.empty())
+    {
+        cout << "Image cannot be loaded..!!" << endl;
+        return -1;
+    }
+
+    cvtColor(img1, img2, COLOR_RGB2HSV);
+
+    int brightness = 0;
+    cout << endl << "Please, enter multiplier for brightness: ";
+    cin >> brightness;
+
+    Mat img_new_brightness;
+    img2.convertTo(img_new_brightness, -1, 1, brightness);
+
+    namedWindow("New Brightness", WINDOW_AUTOSIZE);
+    imshow("New Brightness", img_new_brightness);
+
+
+    waitKey(0); //wait for key press
+    destroyAllWindows();
+    main();
+
+}
 
 Scalar getMSSIM(const Mat& i1, const Mat& i2)
 {
