@@ -74,25 +74,43 @@ int main()
     return 0;
 }
 
+Mat chooseimg() 
+{
+    cout << endl << "Enter full name of the file: " << endl;
+    string imagename = "";
+    cin >> imagename;
 
+    try
+    {
+        Mat img = imread(samples::findFile(imagename), IMREAD_COLOR); //Поиск изображения 1.jpg происходит в папке samples директории OpenCV
+        if (img.empty())
+        {
+            cout << "Image cannot be loaded..!!" << endl;
+            exit(0);
+        }
+
+        return img;
+    }
+    catch (cv::Exception)
+    {
+        cout << "Image cannot be loaded..!!" << endl;
+        exit(0);
+    }
+
+
+}
 //Functions
 int task_1()
 {
-    string image1_path = samples::findFile("1.jpg");
-    string image2_path = samples::findFile("2.jpg");
+    Mat img = chooseimg();
+    Mat img1 = chooseimg();
 
-    Mat img = imread(image1_path, IMREAD_COLOR);
-    Mat img1 = imread(image2_path, IMREAD_COLOR);
-    if (img.empty() || img1.empty())
-    {
-        cout << "Could not read the image: " << image1_path << endl;
-        return 1;
-    }
     if (img.size != img1.size)
     {
         cout << "Images have different sizes, that's error: " << endl;
         return 1;
     }
+
     namedWindow("Reference window", WINDOW_AUTOSIZE);
     namedWindow("Test window", WINDOW_AUTOSIZE);
     moveWindow("Test window", 400, 0);
@@ -117,14 +135,8 @@ int task_1()
 
 int task_3b()
 {
-    string image_path = samples::findFile("1.jpg");
     Mat img1, img2, img3;
-    img1 = imread(image_path, IMREAD_COLOR);
-    if (img1.empty())
-    {
-        cout << "Image cannot be loaded..!!" << endl;
-        return -1;
-    }
+    img1 = chooseimg();
 
     cvtColor(img1, img2, COLOR_RGB2HSV);
     cvtColor(img2, img3, COLOR_HSV2BGR);
@@ -144,15 +156,7 @@ int task_3b()
 
 int task_3d_rgb()
 {
-        string image_path = samples::findFile("1.jpg");
-        Mat img = imread(image_path, IMREAD_COLOR); //open and read the image
-
-
-        if (img.empty())
-        {
-            cout << "Image cannot be loaded..!!" << endl;
-            return -1;
-        }
+    Mat img = chooseimg();
 
         int brightness = 0;
         cout << endl << "Please, enter multiplier for brightness: ";
@@ -172,15 +176,8 @@ int task_3d_rgb()
 
 int task_3d_hsv()
 {
-    string image_path = samples::findFile("1.jpg");
     Mat img1, img2;
-    img1 = imread(image_path, IMREAD_COLOR);
-
-    if (img1.empty())
-    {
-        cout << "Image cannot be loaded..!!" << endl;
-        return -1;
-    }
+    img1 = chooseimg();
 
     cvtColor(img1, img2, COLOR_RGB2HSV);
 
