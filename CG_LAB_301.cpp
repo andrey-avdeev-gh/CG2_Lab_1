@@ -6,6 +6,9 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
+#define min_f(a, b, c)  (fminf(a, fminf(b, c)))
+#define max_f(a, b, c)  (fmaxf(a, fmaxf(b, c)))
+
 using namespace std;
 using namespace cv;
 
@@ -16,6 +19,7 @@ int task_3a();
 int task_3b();
 int task_3d_rgb();
 int task_3d_hsv();
+void RGB2HSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV);
 Scalar getMSSIM(const Mat& i1, const Mat& i2);
 
 
@@ -47,13 +51,13 @@ int main()
         task_1();
         break;
     case 2:
-        //Кирилл
+        task_2a();
         break;
     case 3:
-        //Кирилл
+        task_2b();
         break;
     case 4:
-        //Кирилл
+        task_3a();
         break;
     case 5:
         task_3b();
@@ -99,7 +103,7 @@ Mat chooseimg()
 
 
 }
-//Functions
+
 int task_1()
 {
     Mat img = chooseimg();
@@ -131,7 +135,87 @@ int task_1()
     main();
 }
 
-//Кирилл впишет свою часть сюда
+
+int task_2a()
+{
+    Mat img1, NewImage;
+    img1 = chooseimg();
+
+    NewImage = Mat::zeros(img1.rows, img1.cols, CV_8UC1); //creating an empty matrix with image.rows X image.cols dimensions
+
+    for (int i = 0; i < img1.cols; i++)
+    {
+        for (int j = 0; j < img1.rows; j++)
+        {
+            Vec3b color1 = img1.at<Vec3b>(Point(i, j));
+            Scalar color2 = NewImage.at<uchar>(Point(i, j));
+            color2 = (color1.val[0] + color1.val[1] + color1.val[2]) / 3;
+
+            NewImage.at<uchar>(Point(i, j)) = color2.val[0];
+        }
+    }
+
+    namedWindow("user converted image", WINDOW_AUTOSIZE);
+    imshow("user converted image", NewImage);
+
+    waitKey(0);
+    destroyAllWindows();
+    main();
+
+}
+
+
+
+int task_2b()
+{
+    Mat img1, img2;
+    img1 = chooseimg();
+
+    cvtColor(img1, img2, COLOR_RGB2GRAY);
+
+    namedWindow("origin", WINDOW_AUTOSIZE);
+    moveWindow("origin", 400, 0);
+
+    namedWindow("CVT gray image", WINDOW_AUTOSIZE);
+
+    imshow("origin", img1);
+    imshow("CVT gray image", img2);
+
+    waitKey(0);
+    destroyAllWindows();
+    main();
+}
+
+int task_3a() 
+{
+    Mat img1, NewImage;
+    img1 = chooseimg();
+    //rgb to hsv conversion
+    for (int i = 0; i < img1.cols; i++)
+    {
+        for (int j = 0; j < img1.rows; j++)
+        {
+            Vec3b color1 = img1.at<Vec3b>(Point(i, j));
+            Vec3b color2 = NewImage.at<Vec3b>(Point(i, j));
+            float r = (float)color1.val[0], g = (float)color1.val[1], b = (float)color1.val[2];
+            float h, s, v;
+
+            RGB2HSV(r,g,b,h,s,v);
+            color2 = h * s * v;
+
+            NewImage.at<Vec3b>(Point(i, j)) = color2;
+        }
+    }
+
+
+    namedWindow("user converted image", WINDOW_AUTOSIZE);
+    imshow("user converted image", NewImage);
+
+    waitKey(0);
+    destroyAllWindows();
+    main();
+}
+
 
 int task_3b()
 {
@@ -147,12 +231,14 @@ int task_3b()
 
     imshow("origin", img1);
     imshow("rgb2hsv", img2);
-    imshow("hsv2rgb", img3);
+    imshow("hsv2rgb", img3); 
 
     waitKey(0);
     destroyAllWindows();
     main();
 }
+
+
 
 int task_3d_rgb()
 {
@@ -250,4 +336,40 @@ Scalar getMSSIM(const Mat& i1, const Mat& i2)
 
     Scalar mssim = mean(ssim_map); // mssim = average of ssim map
     return mssim;
+}
+
+void RGB2HSV(float& fR, float& fG, float fB, float& fH, float& fS, float& fV) {
+    float fCMax = max(max(fR, fG), fB);
+    float fCMin = min(min(fR, fG), fB);
+    float fDelta = fCMax - fCMin;
+
+    if (fDelta > 0) {
+        if (fCMax == fR) {
+            fH = 60 * (fmod(((fG - fB) / fDelta), 6));
+        }
+        else if (fCMax == fG) {
+            fH = 60 * (((fB - fR) / fDelta) + 2);
+        }
+        else if (fCMax == fB) {
+            fH = 60 * (((fR - fG) / fDelta) + 4);
+        }
+
+        if (fCMax > 0) {
+            fS = fDelta / fCMax;
+        }
+        else {
+            fS = 0;
+        }
+
+        fV = fCMax;
+    }
+    else {
+        fH = 0;
+        fS = 0;
+        fV = fCMax;
+    }
+
+    if (fH < 0) {
+        fH = 360 + fH;
+    }
 }
