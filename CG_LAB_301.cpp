@@ -6,9 +6,6 @@
 #include <opencv2/core.hpp>
 #include <opencv2/highgui.hpp>
 
-#define min_f(a, b, c)  (fminf(a, fminf(b, c)))
-#define max_f(a, b, c)  (fmaxf(a, fmaxf(b, c)))
-
 using namespace std;
 using namespace cv;
 
@@ -161,9 +158,7 @@ int task_2a()
     waitKey(0);
     destroyAllWindows();
     main();
-
 }
-
 
 
 int task_2b()
@@ -196,14 +191,22 @@ int task_3a()
         for (int j = 0; j < img1.rows; j++)
         {
             Vec3b color1 = img1.at<Vec3b>(Point(i, j));
-            Vec3b color2 = NewImage.at<Vec3b>(Point(i, j));
+            Vec3b color2 = NewImage.at<Vec3b>(i, j);
+
             float r = (float)color1.val[0], g = (float)color1.val[1], b = (float)color1.val[2];
             float h, s, v;
+            RGB2HSV(r, g, b, h, s, v);
 
-            RGB2HSV(r,g,b,h,s,v);
-            color2 = h * s * v;
-
-            NewImage.at<Vec3b>(Point(i, j)) = color2;
+            color2.val[0] = h; //hue
+            color2.val[1] = s; //saturation
+            color2.val[2] = v; //value
+                    if (color2[0] != h) 
+                    {
+                        color2.val[0] = 0;
+                        color2.val[1] = 0;
+                        color2.val[2] = 0;
+                    }
+           NewImage.at<uchar>(Point(i, j)) = color2.val[0];
         }
     }
 
